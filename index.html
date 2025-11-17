@@ -152,7 +152,11 @@
     }
     fieldset {
       border: none;
-      margin: 1em 0;
+      margin-top: 1em;
+      margin-bottom: 1em;
+      width: fit-content;
+      display: inline-block;
+
     }
     legend {
       font-weight: 600;
@@ -160,7 +164,7 @@
     }
     .print-footer {
       text-align: center;
-      padding: 1em 0;
+      padding: 1em auto;
     }
     /* 印刷 */
     @media print {
@@ -214,7 +218,8 @@
 </head>
 <body>
   <h1 class="no-print">算数プリント瞬間生成</h1>
-  <span class="no-print">営利目的・商用利用に関わらず無料で使用可能です。利用は自己責任でお願いします。使用方法等は<a href="https://github.com/UmemotoCtrl/Arithmetic-Worksheet">GitHub</a>から。</span>
+  <div class="no-print" style="margin-left: auto; margin-right: 0; width: fit-content;"><span>アクセス数 今月：</span><span id="month"></span><span>、トータル：</span><span id="total"></span></div>
+  <div class="no-print" style="margin: auto; width: fit-content;">営利目的・商用利用に関わらず無料で使用可能です。利用は自己責任でお願いします。使用方法等は<a href="https://github.com/UmemotoCtrl/Arithmetic-Worksheet">GitHub</a>から。</div>
   <h3 class="no-print list-title">サンプル問題ダウンロード</h3>
   <ul class="no-print horizontal-list">
     <li class="no-print"><a href="./problem/たし算2桁＋1桁.txt" download="たし算2桁＋1桁.txt">たし算2桁＋1桁</a></li>
@@ -228,6 +233,7 @@
   <input type="file" id="csvInput" accept=".txt" class="no-print"><br>
   <span class="no-print">タイトル：</span>
   <input type="text" id="titleInput" class="no-print" value="たし算100超え">
+  <span class="no-print">問題は1行1問、%1sで1文字分スペース</span>
   <textarea id="CSVText">
 21 + 39 = %4s
 78 + 11 = %4s
@@ -355,13 +361,14 @@
     <label for="radio1col">1 col</label>
     <input type="radio" id="radio2col" name="col" value="2" checked />
     <label for="radio2col">2 col</label>
-  </fieldset>  <button onclick="showQuestions()" class="no-print">Generate</button>
-  <button onclick="printQuestion()" class="no-print">Print</button>
-  <span class="no-print">1行1問、%1sで1文字分スペース</span>
-
-
+  </fieldset>
+  <div class="no-print" style="display: inline-block;">
+    <button onclick="showQuestions()" class="no-print">Generate</button>
+    <button onclick="printQuestion()" class="no-print">Print</button>
+  </div>
+  
   <h3 class="no-print">簡易印刷プレビュー</h3>
-  <div id="PrintArea"></div>
+  <div id="PrintArea" style="margin: auto; width: fit-content;"></div>
   <footer class="print-footer">算数プリント瞬間生成 © 2025 Kazuki Umemoto</footer>
   <script>
     function makeWrapDiv(title, lines) {
@@ -394,7 +401,6 @@
       for (let i = 1; i < wrapDivs.length; i++) {
         wrapDivs[i].className = wrapDivs[i].className+" "+"page-break";
       }
-
       // Column調整
       /* ol.Problems {
         column-count: 1;
@@ -457,6 +463,27 @@
     // 初期化
     let numOfProb = 30;
     showQuestions();
+    // アクセスカウンタ
+    let access_data;
+    fetch("https://nostalgic.llll-ll.com/api/visit?action=display&id=umemotoctrl-02a317d8&type=month&format=json")
+    .then(response => response.json())
+    .then(data => {
+      // ここでdata変数にJSON全体が格納されます
+      // console.log(data);
+      // 必要な情報を変数に代入
+      // let id = data.id;
+      // let url = data.url;
+      // let total = data.total;
+      // let today = data.today;
+      // let yesterday = data.yesterday;
+      // let week = data.week;
+      // let month = data.month;
+      // let settings = data.settings;
+      document.getElementById("month").innerHTML = data.month;
+      document.getElementById("total").innerHTML = data.total;
+    });
   </script>
+  <!-- Nostalgic Counter、https://nostalgic.llll-ll.com/counter -->
+  <script src="https://nostalgic.llll-ll.com/components/visit.js"></script>
 </body>
 </html>
