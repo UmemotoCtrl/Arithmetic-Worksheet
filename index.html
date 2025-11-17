@@ -459,6 +459,20 @@
         }
       });
     });
+    function countUp () {
+      fetch("https://nostalgic.llll-ll.com/api/visit?action=increment&id=umemotoctrl-02a317d8")
+      .then(response => response.json())
+      .then(data => {
+        if(data.success){
+          console.log("カウント増加！", data.data);
+        } else {
+          console.error("カウント失敗", data);
+        }
+      })
+      .catch(error => {
+        console.error("通信エラー", error);
+      });
+    }
 
     // 初期化
     let numOfProb = 30;
