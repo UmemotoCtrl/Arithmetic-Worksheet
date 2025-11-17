@@ -233,6 +233,17 @@
   <input type="file" id="csvInput" accept=".txt" class="no-print"><br>
   <span class="no-print">タイトル：</span>
   <input type="text" id="titleInput" class="no-print" value="たし算100超え">
+  <fieldset class="no-print">
+    <legend>1段組みか2段組みを選んでください:</legend>
+    <input type="radio" id="radio1col" name="col" value="1" />
+    <label for="radio1col">1 col</label>
+    <input type="radio" id="radio2col" name="col" value="2" checked />
+    <label for="radio2col">2 col</label>
+  </fieldset>
+  <div class="no-print" style="display: inline-block;">
+    <button onclick="showQuestions()" class="no-print">Generate</button>
+    <button onclick="printQuestion()" class="no-print">Print</button>
+  </div>
   <span class="no-print">問題は1行1問、%1sで1文字分スペース</span>
   <textarea id="CSVText">
 21 + 39 = %4s
@@ -355,17 +366,7 @@
 68 + 81 = %4s
 17 + 99 = %4s
 32 + 89 = %4s</textarea>
-  <fieldset class="no-print">
-    <legend>1段組みか2段組みを選んでください:</legend>
-    <input type="radio" id="radio1col" name="col" value="1" />
-    <label for="radio1col">1 col</label>
-    <input type="radio" id="radio2col" name="col" value="2" checked />
-    <label for="radio2col">2 col</label>
-  </fieldset>
-  <div class="no-print" style="display: inline-block;">
-    <button onclick="showQuestions()" class="no-print">Generate</button>
-    <button onclick="printQuestion()" class="no-print">Print</button>
-  </div>
+
   
   <h3 class="no-print">簡易印刷プレビュー</h3>
   <div id="PrintArea" style="margin: auto; width: fit-content;"></div>
@@ -430,6 +431,7 @@
     }
     function printQuestion() {
       showQuestions();
+      // countUp();
       window.print();
     }
 
@@ -475,6 +477,7 @@
     }
 
     // 初期化
+    countUp ();
     let numOfProb = 30;
     showQuestions();
     // アクセスカウンタ
@@ -498,6 +501,6 @@
     });
   </script>
   <!-- Nostalgic Counter、https://nostalgic.llll-ll.com/counter -->
-  <script src="https://nostalgic.llll-ll.com/components/visit.js"></script>
+  <!-- <script src="https://nostalgic.llll-ll.com/components/visit.js"></script> -->
 </body>
 </html>
