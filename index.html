@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>算数プリント瞬間生成</title>
+  <link rel="shortcut icon" type="image/x-icon" href="https://umemotoctrl.github.io/img/favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@100;300;400;500;700;800;900&display=swap" rel="stylesheet">
   <style>
     body {
@@ -212,16 +214,16 @@
 </head>
 <body>
   <h1 class="no-print">算数プリント瞬間生成</h1>
-  <span class="no-print">営利目的・商用利用に関わらず無料で使用可能です。利用は自己責任でお願いします。</span>
+  <span class="no-print">営利目的・商用利用に関わらず無料で使用可能です。利用は自己責任でお願いします。使用方法等は<a href="https://github.com/UmemotoCtrl/Arithmetic-Worksheet">GitHub</a>から。</span>
   <h3 class="no-print list-title">サンプル問題ダウンロード</h3>
   <ul class="no-print horizontal-list">
-    <li class="no-print"><a href="./たし算2桁＋1桁.txt" download="たし算2桁＋1桁.txt">たし算2桁＋1桁</a></li>
-    <li class="no-print"><a href="./たし算100超え.txt" download="たし算100超え.txt">たし算100超え</a></li>
-    <li class="no-print"><a href="./ひき算2桁－1桁.txt" download="ひき算2桁－1桁.txt">ひき算2桁－1桁</a></li>
-    <li class="no-print"><a href="./ひき算100まで.txt" download="ひき算100まで.txt">ひき算100まで</a></li>
-    <li class="no-print"><a href="./かけ算2桁×1桁.txt" download="かけ算2桁×1桁.txt">かけ算2桁×1桁</a></li>
-    <li class="no-print"><a href="./時刻の計算.txt" download="時刻の計算.txt">時刻の計算 (1col用)</a></li>
-    <li class="no-print"><a href="./時間の計算.txt" download="時間の計算.txt">時間の計算 (1col用)</a></li>
+    <li class="no-print"><a href="./problem/たし算2桁＋1桁.txt" download="たし算2桁＋1桁.txt">たし算2桁＋1桁</a></li>
+    <li class="no-print"><a href="./problem/たし算100超え.txt" download="たし算100超え.txt">たし算100超え</a></li>
+    <li class="no-print"><a href="./problem/ひき算2桁－1桁.txt" download="ひき算2桁－1桁.txt">ひき算2桁－1桁</a></li>
+    <li class="no-print"><a href="./problem/ひき算100まで.txt" download="ひき算100まで.txt">ひき算100まで</a></li>
+    <li class="no-print"><a href="./problem/かけ算2桁×1桁.txt" download="かけ算2桁×1桁.txt">かけ算2桁×1桁</a></li>
+    <li class="no-print"><a href="./problem/時刻の計算.txt" download="時刻の計算.txt">時刻の計算 (1col用)</a></li>
+    <li class="no-print"><a href="./problem/時間の計算.txt" download="時間の計算.txt">時間の計算 (1col用)</a></li>
   </ul>
   <input type="file" id="csvInput" accept=".txt" class="no-print"><br>
   <span class="no-print">タイトル：</span>
@@ -347,16 +349,16 @@
 68 + 81 = %4s
 17 + 99 = %4s
 32 + 89 = %4s</textarea>
-  <button onclick="showQuestions()" class="no-print">Generate</button>
-  <button onclick="printQuestion()" class="no-print">Print</button>
-  <span class="no-print">1行1問、%1sで1文字分スペース</span>
   <fieldset class="no-print">
     <legend>1段組みか2段組みを選んでください:</legend>
     <input type="radio" id="radio1col" name="col" value="1" />
     <label for="radio1col">1 col</label>
     <input type="radio" id="radio2col" name="col" value="2" checked />
     <label for="radio2col">2 col</label>
-  </fieldset>
+  </fieldset>  <button onclick="showQuestions()" class="no-print">Generate</button>
+  <button onclick="printQuestion()" class="no-print">Print</button>
+  <span class="no-print">1行1問、%1sで1文字分スペース</span>
+
 
   <h3 class="no-print">簡易印刷プレビュー</h3>
   <div id="PrintArea"></div>
