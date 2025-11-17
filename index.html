@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>算数プリント瞬間生成</title>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@100;300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'M PLUS 1p', sans-serif;
+      font-size: 18px;
+      margin-top: 1em;
+      margin-left: 1em;
+    }
+    div.wrapDiv {
+      /* width: 210mm;
+      height: 297mm; */
+      width: 185mm;
+      height: 280mm;
+      border: 1px solid black;
+      margin-top: 1em;
+      padding-top: 15mm;
+      padding-left: 12.7mm;
+      padding-right: 12.7mm;
+    }
+    div.headBar {
+      width: 100%;
+      margin-bottom: 1em;
+    }
+    ol.Problems {
+      font-size: 28px;
+      font-weight: 300;;
+      list-style: none;
+      counter-reset: num;
+      padding-left: 0;
+      margin: 0px;
+    }
+    ol.Problems > li {
+      counter-increment: num;
+      margin-top: 22px;
+      margin-bottom: 22px;
+    }
+    ol.Problems > li:first-child {
+      margin-top: 0px;
+    }
+    ol.Problems > li::before {
+      font-size: 22px;
+      content: "(" counter(num) ")";
+      margin-right: 1.5em;
+    }
+    span.title {
+      font-size: 30px;
+      display: inline-block;
+      width: 50%;
+    }
+    span.name {
+      display: inline-block;
+      width: 50%;
+      border-bottom: 1px solid black;
+    }
+    textarea#CSVText {
+      display: block;
+      width: 80%;
+      height: 30mm;
+      font-size: 18px;
+    }
+    /* 装飾 */
+    ul.horizontal-list {
+      list-style: none;
+      padding: 0;
+      margin: 1em 0;
+      text-align: center;
+    }
+    ul.horizontal-list > li {
+      display: inline-block;
+      background: #dde1ef;
+      border-radius: 8px;
+      padding: 0.7em 1.4em;
+      min-width: 110px;
+      font-weight: 500;
+      color: #4067f9;
+      font-size: 1.07em;
+      text-align: center;
+      margin: 0 0.7em 0.7em 0;
+      box-shadow: 0 1px 6px #8ca7ff16;
+      transition: background 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    ul.horizontal-list > li:hover {
+      background: #60b4ff;
+      color: #fff;
+      box-shadow: 0 4px 16px #4067f972;
+    }
+    h1 {
+      font-size: 2.2em;
+      font-weight: 800;
+      color: #4067f9;
+      letter-spacing: 0.015em;
+      margin-bottom: 1.2em;
+      background: linear-gradient(93deg, #60b4ff 35%, #4067f9 68%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      padding: 0.3em 0;
+      border-radius: 12px;
+      text-shadow: 0 3px 12px #dde1ef66;
+    }
+    input, textarea, button {
+      font-size: 1em;
+      border-radius: 6px;
+      border: 1px solid #bdd5ff;
+      padding: 0.5em 1em;
+      margin: 0.3em 0.6em 0.3em 0;
+      background: #f7faff;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    textarea {
+      font-family: 'M PLUS 1p', 'Segoe UI', 'Helvetica Neue', Arial, monospace;
+      font-size: 1.07em;
+      background: #f7faff;
+      color: #222;
+      border: 1.6px solid #bdd5ff;
+      border-radius: 7px;
+      box-shadow: 0 1px 10px #dde1ef16;
+      padding: 1.1em 1.2em;
+      margin-top: 1em;
+      line-height: 1.65;
+      letter-spacing: 0.04em;
+      resize: vertical;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    textarea:focus {
+      border-color: #4067f9;
+      box-shadow: 0 0 0 4px #60b4ff26;
+      outline: none;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px #8ca7ff30;
+      border-color: #4067f9;
+    }
+    button {
+      background: linear-gradient(90deg,#4067f9,#60b4ff);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(64,103,249,.10);
+    }
+    button:hover {
+      background: linear-gradient(90deg,#4067f9,#53aaff);
+    }
+    fieldset {
+      border: none;
+      margin: 1em 0;
+    }
+    legend {
+      font-weight: 600;
+      color: #4067f9;
+    }
+    .print-footer {
+      text-align: center;
+      padding: 1em 0;
+    }
+    /* 印刷 */
+    @media print {
+      .no-print { display: none; }
+      body {
+        margin: 0;
+      }
+      textarea#CSVText {
+        display: none;
+      }
+      div.wrapDiv {
+        width: auto;
+        height: auto;
+        border: none;
+        padding: 0;
+        margin: 0;
+      }
+      div.wrapDiv:not(:first-child) {
+        margin-top: 2em;  /* 2ページ目以降のstyle */
+      }
+      div.wrapDiv:last-child {
+        page-break-after: auto; /* 最後の空白ページ回避 */
+      }
+      .page-break {
+        break-before: page;
+      }
+      @page {
+        size: A4;        /* 用紙サイズの指定も可能 */
+        margin-top: 2mm;
+        margin-bottom: 0mm;
+        margin-left: 12.7mm;
+        margin-right: 12.7mm;
+      }
+      .print-footer {
+        display: block;
+        position: fixed;
+        left: 0;
+        width: 100vw;
+        background: #fff;
+        color: #222;
+        font-size: 0.8em;
+        z-index: 1000;
+        padding: 8px 0;
+        bottom: 0;
+        text-align: right;
+        padding-right: 2em;
+        padding-bottom: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="no-print">算数プリント瞬間生成</h1>
+  <span class="no-print">営利目的・商用利用に関わらず無料で使用可能です。利用は自己責任でお願いします。</span>
+  <h3 class="no-print list-title">サンプル問題ダウンロード</h3>
+  <ul class="no-print horizontal-list">
+    <li class="no-print"><a href="./たし算2桁＋1桁.txt" download="たし算2桁＋1桁.txt">たし算2桁＋1桁</a></li>
+    <li class="no-print"><a href="./たし算100超え.txt" download="たし算100超え.txt">たし算100超え</a></li>
+    <li class="no-print"><a href="./ひき算2桁－1桁.txt" download="ひき算2桁－1桁.txt">ひき算2桁－1桁</a></li>
+    <li class="no-print"><a href="./ひき算100まで.txt" download="ひき算100まで.txt">ひき算100まで</a></li>
+    <li class="no-print"><a href="./かけ算2桁×1桁.txt" download="かけ算2桁×1桁.txt">かけ算2桁×1桁</a></li>
+    <li class="no-print"><a href="./時刻の計算.txt" download="時刻の計算.txt">時刻の計算 (1col用)</a></li>
+    <li class="no-print"><a href="./時間の計算.txt" download="時間の計算.txt">時間の計算 (1col用)</a></li>
+  </ul>
+  <input type="file" id="csvInput" accept=".txt" class="no-print"><br>
+  <span class="no-print">タイトル：</span>
+  <input type="text" id="titleInput" class="no-print" value="たし算100超え">
+  <textarea id="CSVText">
+21 + 39 = %4s
+78 + 11 = %4s
+35 + 91 = %4s
+24 + 89 = %4s
+22 + 97 = %4s
+61 + 38 = %4s
+34 + 16 = %4s
+57 + 92 = %4s
+79 + 93 = %4s
+97 + 91 = %4s
+85 + 62 = %4s
+31 + 89 = %4s
+39 + 56 = %4s
+53 + 96 = %4s
+73 + 77 = %4s
+67 + 47 = %4s
+53 + 79 = %4s
+14 + 83 = %4s
+44 + 36 = %4s
+51 + 29 = %4s
+51 + 19 = %4s
+71 + 15 = %4s
+29 + 38 = %4s
+67 + 22 = %4s
+56 + 78 = %4s
+45 + 37 = %4s
+79 + 11 = %4s
+36 + 17 = %4s
+47 + 51 = %4s
+19 + 92 = %4s
+16 + 69 = %4s
+84 + 49 = %4s
+37 + 89 = %4s
+99 + 26 = %4s
+13 + 83 = %4s
+15 + 33 = %4s
+68 + 51 = %4s
+81 + 41 = %4s
+66 + 13 = %4s
+64 + 29 = %4s
+57 + 13 = %4s
+52 + 39 = %4s
+24 + 16 = %4s
+42 + 48 = %4s
+29 + 33 = %4s
+14 + 92 = %4s
+76 + 17 = %4s
+48 + 33 = %4s
+75 + 68 = %4s
+76 + 56 = %4s
+18 + 91 = %4s
+56 + 54 = %4s
+28 + 11 = %4s
+23 + 38 = %4s
+25 + 94 = %4s
+67 + 21 = %4s
+37 + 96 = %4s
+92 + 89 = %4s
+41 + 13 = %4s
+47 + 92 = %4s
+17 + 14 = %4s
+94 + 39 = %4s
+24 + 88 = %4s
+75 + 44 = %4s
+11 + 19 = %4s
+77 + 19 = %4s
+48 + 45 = %4s
+34 + 76 = %4s
+17 + 42 = %4s
+56 + 86 = %4s
+77 + 11 = %4s
+41 + 39 = %4s
+53 + 43 = %4s
+95 + 63 = %4s
+24 + 84 = %4s
+16 + 92 = %4s
+75 + 22 = %4s
+45 + 19 = %4s
+45 + 24 = %4s
+95 + 43 = %4s
+13 + 99 = %4s
+75 + 19 = %4s
+56 + 14 = %4s
+77 + 21 = %4s
+64 + 48 = %4s
+61 + 89 = %4s
+55 + 85 = %4s
+25 + 84 = %4s
+54 + 19 = %4s
+32 + 39 = %4s
+56 + 41 = %4s
+61 + 49 = %4s
+18 + 97 = %4s
+22 + 95 = %4s
+64 + 28 = %4s
+72 + 18 = %4s
+54 + 28 = %4s
+87 + 11 = %4s
+26 + 66 = %4s
+27 + 13 = %4s
+19 + 29 = %4s
+95 + 95 = %4s
+43 + 27 = %4s
+18 + 91 = %4s
+33 + 82 = %4s
+87 + 33 = %4s
+65 + 31 = %4s
+65 + 27 = %4s
+35 + 18 = %4s
+11 + 99 = %4s
+91 + 64 = %4s
+77 + 12 = %4s
+78 + 11 = %4s
+93 + 46 = %4s
+17 + 28 = %4s
+36 + 53 = %4s
+19 + 97 = %4s
+68 + 81 = %4s
+17 + 99 = %4s
+32 + 89 = %4s</textarea>
+  <button onclick="showQuestions()" class="no-print">Generate</button>
+  <button onclick="printQuestion()" class="no-print">Print</button>
+  <span class="no-print">1行1問、%1sで1文字分スペース</span>
+  <fieldset class="no-print">
+    <legend>1段組みか2段組みを選んでください:</legend>
+    <input type="radio" id="radio1col" name="col" value="1" />
+    <label for="radio1col">1 col</label>
+    <input type="radio" id="radio2col" name="col" value="2" checked />
+    <label for="radio2col">2 col</label>
+  </fieldset>
+
+  <h3 class="no-print">簡易印刷プレビュー</h3>
+  <div id="PrintArea"></div>
+  <footer class="print-footer">算数プリント瞬間生成 © 2025 Kazuki Umemoto</footer>
+  <script>
+    function makeWrapDiv(title, lines) {
+      const wrapDiv = document.createElement('div');
+      wrapDiv.className = "wrapDiv";
+      const titleDiv = document.createElement('div');
+      titleDiv.className = "headBar";
+      titleDiv.innerHTML = '<span class="title">'+title+'</span><span class="name">name </span>'
+      wrapDiv.appendChild(titleDiv);
+      const ol = document.createElement('ol');
+      ol.className = "Problems";
+      for (const value of lines) {
+        const replaced = value.replace(/%(\d+)s/g, (match, n) => 
+          `<span style="display:inline-block;width:${n}em;"></span>`
+        );
+        const li = document.createElement('li');
+        li.innerHTML = replaced;
+        ol.appendChild(li);
+      }
+      wrapDiv.appendChild(ol);
+      return wrapDiv;
+    }
+    function showQuestions() {
+      document.getElementById("PrintArea").innerHTML="";
+      const lines = document.getElementById('CSVText').value.split('\n');// 各行ごとに分割
+      for (let i = 0; i < lines.length/numOfProb; i++) {
+              document.getElementById("PrintArea").appendChild(makeWrapDiv(document.getElementById("titleInput").value+" "+String(i+1), lines.slice(i*numOfProb,(i+1)*numOfProb)));
+      }
+      const wrapDivs = document.getElementsByClassName("wrapDiv");
+      for (let i = 1; i < wrapDivs.length; i++) {
+        wrapDivs[i].className = wrapDivs[i].className+" "+"page-break";
+      }
+
+      // Column調整
+      /* ol.Problems {
+        column-count: 1;
+      }
+      ol.Problems {
+        column-count: 2;
+      }
+      ol.Problems > li {
+        text-align-last: justify;
+      } */
+      // 1 col
+      document.querySelectorAll('ol.Problems').forEach(el => {
+        el.style.columnCount = 1;
+      });
+      document.querySelectorAll('ol.Problems > li').forEach(el => {
+        el.style.textAlignLast = "left";
+      });
+      // 2 col
+      if (numOfProb == 30) {
+        document.querySelectorAll('ol.Problems').forEach(el => {
+          el.style.columnCount = 2;
+        });
+        document.querySelectorAll('ol.Problems > li').forEach(el => {
+          el.style.textAlignLast = "justify";
+        });
+      }
+    }
+    function printQuestion() {
+      showQuestions();
+      window.print();
+    }
+
+    // テキストファイルの読み込み
+    document.getElementById('csvInput').addEventListener('change', function(e){
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.readAsText(file); // テキストとして読み込み
+      reader.onload = function(e) {
+        document.getElementById('titleInput').value = file.name.split('.')[0];
+        document.getElementById('CSVText').value = e.target.result;
+        showQuestions();
+      };
+    });
+    // ラジオボタン
+    const radios = document.getElementsByName('col');
+    radios.forEach(radio => {
+      radio.addEventListener('change', function(event) {
+        if (event.target.checked) {
+          if (event.target.value == "1") {
+            numOfProb = 15;
+            showQuestions();
+          } else {
+            numOfProb = 30;
+            showQuestions();
+          }
+        }
+      });
+    });
+
+    // 初期化
+    let numOfProb = 30;
+    showQuestions();
+  </script>
+</body>
+</html>
