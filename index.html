@@ -169,12 +169,8 @@
     /* 印刷 */
     @media print {
       .no-print { display: none; }
-      body {
-        margin: 0;
-      }
-      textarea#CSVText {
-        display: none;
-      }
+      body { margin: 0; }
+      textarea#CSVText { display: none; }
       div.wrapDiv {
         width: auto;
         height: auto;
@@ -188,9 +184,7 @@
       div.wrapDiv:last-child {
         page-break-after: auto; /* 最後の空白ページ回避 */
       }
-      .page-break {
-        break-before: page;
-      }
+      .page-break { break-before: page; }
       @page {
         size: A4;        /* 用紙サイズの指定も可能 */
         margin-top: 2mm;
@@ -214,6 +208,12 @@
         padding-bottom: 1em;
       }
     }
+    @media screen {
+      div#PrintArea {
+        margin: auto;
+        width: fit-content;
+      }
+    }
   </style>
 </head>
 <body>
@@ -230,7 +230,7 @@
     <li class="no-print"><a href="./problem/時刻の計算.txt" download="時刻の計算.txt">時刻の計算 (1col用)</a></li>
     <li class="no-print"><a href="./problem/時間の計算.txt" download="時間の計算.txt">時間の計算 (1col用)</a></li>
   </ul>
-  <input type="file" id="csvInput" accept=".txt" class="no-print"><br>
+  <input type="file" id="csvInput" accept=".txt" class="no-print">
   <span class="no-print">タイトル：</span>
   <input type="text" id="titleInput" class="no-print" value="たし算100超え">
   <fieldset class="no-print">
@@ -240,11 +240,6 @@
     <input type="radio" id="radio2col" name="col" value="2" checked />
     <label for="radio2col">2 col</label>
   </fieldset>
-  <div class="no-print" style="display: inline-block;">
-    <button onclick="showQuestions()" class="no-print">Generate</button>
-    <button onclick="printQuestion()" class="no-print">Print</button>
-  </div>
-  <span class="no-print">問題は1行1問、%1sで1文字分スペース</span>
   <textarea id="CSVText">
 21 + 39 = %4s
 78 + 11 = %4s
@@ -366,10 +361,15 @@
 68 + 81 = %4s
 17 + 99 = %4s
 32 + 89 = %4s</textarea>
+  <div class="no-print" style="display: inline-block;">
+    <button onclick="showQuestions()" class="no-print">Preview</button>
+    <button onclick="printQuestion()" class="no-print">Print</button>
+  </div>
+  <span class="no-print">問題は1行1問、%1sで1文字分スペース</span>
 
   
   <h3 class="no-print">簡易印刷プレビュー</h3>
-  <div id="PrintArea" style="margin: auto; width: fit-content;"></div>
+  <div id="PrintArea"></div>
   <footer class="print-footer">算数プリント瞬間生成 © 2025 Kazuki Umemoto</footer>
   <script>
     function makeWrapDiv(title, lines) {
