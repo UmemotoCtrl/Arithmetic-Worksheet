@@ -97,7 +97,7 @@
       font-weight: 800;
       color: #4067f9;
       letter-spacing: 0.015em;
-      margin-bottom: 1.2em;
+      margin-bottom: 0;
       background: linear-gradient(93deg, #60b4ff 35%, #4067f9 68%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -218,7 +218,7 @@
 </head>
 <body>
   <h1 class="no-print">算数プリント瞬間生成</h1>
-  <div class="no-print" style="margin-left: auto; margin-right: 0; width: fit-content;"><span>プリント数 今月：</span><span id="month"></span><span>、トータル：</span><span id="total"></span></div>
+  <div class="no-print" style="margin-left: auto; margin-right: 0; width: fit-content; margin-bottom: 1em;"><span>プリント数 今月：</span><span id="month"></span><span>、トータル：</span><span id="total"></span></div>
   <div class="no-print" style="margin: auto; width: fit-content;">営利目的・商用利用に関わらず無料で使用可能です。利用は自己責任でお願いします。使用方法等は<a href="https://github.com/UmemotoCtrl/Arithmetic-Worksheet">GitHub</a>から。</div>
   <h3 class="no-print list-title">サンプル問題ダウンロード</h3>
   <ul class="no-print horizontal-list">
@@ -270,7 +270,7 @@
 79 + 11 = %4s
 36 + 17 = %4s
 47 + 51 = %4s
-19 + 92 = %4s
+19 + 92 = %4s\newpage
 16 + 69 = %4s
 84 + 49 = %4s
 37 + 89 = %4s
@@ -300,7 +300,7 @@
 37 + 96 = %4s
 92 + 89 = %4s
 41 + 13 = %4s
-47 + 92 = %4s
+47 + 92 = %4s\newpage
 17 + 14 = %4s
 94 + 39 = %4s
 24 + 88 = %4s
@@ -330,7 +330,7 @@
 55 + 85 = %4s
 25 + 84 = %4s
 54 + 19 = %4s
-32 + 39 = %4s
+32 + 39 = %4s\newpage
 56 + 41 = %4s
 61 + 49 = %4s
 18 + 97 = %4s
@@ -365,9 +365,8 @@
     <button onclick="showQuestions()" class="no-print">Preview</button>
     <button onclick="printQuestion()" class="no-print">Print</button>
   </div>
-  <span class="no-print">問題は1行1問、%1sで1文字分スペース</span>
+  <span class="no-print">問題は1行1問、%1sで1文字分スペース、\newpageで改ページ、&lt;br&gt;で問題中改行、&lt;b&gt;&lt;/b&gt;で囲めば太字</span>
 
-  
   <h3 class="no-print">簡易印刷プレビュー</h3>
   <div id="PrintArea"></div>
   <footer class="print-footer">算数プリント瞬間生成 © 2025 Kazuki Umemoto</footer>
@@ -394,10 +393,10 @@
     }
     function showQuestions() {
       document.getElementById("PrintArea").innerHTML="";
-      const lines = document.getElementById('CSVText').value.split('\n');// 各行ごとに分割
-      for (let i = 0; i < lines.length/numOfProb; i++) {
-              document.getElementById("PrintArea").appendChild(makeWrapDiv(document.getElementById("titleInput").value+" "+String(i+1), lines.slice(i*numOfProb,(i+1)*numOfProb)));
-      }
+      for (let [index, one_page_problems] of document.getElementById('CSVText').value.split('\\newpage').entries())
+        document.getElementById("PrintArea").appendChild(makeWrapDiv(document.getElementById("titleInput").value+" "+String(index+1), one_page_problems.split('\n').filter(Boolean)));
+
+      // 改ページ用CSSクラスの追加
       const wrapDivs = document.getElementsByClassName("wrapDiv");
       for (let i = 1; i < wrapDivs.length; i++) {
         wrapDivs[i].className = wrapDivs[i].className+" "+"page-break";
